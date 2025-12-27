@@ -93,7 +93,7 @@ contains
                 return
             end if
         end do
-        print *, 'error: no roots'
+        !print *, 'error: no roots'
         traj%mbad = 1 ! плохоая траектория
     end      
 
