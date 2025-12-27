@@ -27,7 +27,7 @@
     "hdrob": 1.5,
     "cleft": 0.7,
     "cright": 1.5,
-    "cdel": 0.0,
+    "cdel": 0.5,
     "rbord": 0.999,
     "pchm": 0.2,
     "pabs": 0.01,
