@@ -6,8 +6,6 @@ module nr_grid
     integer, parameter :: MAX_NR = 200
     !! max size of nr-grids
 
-    real(wp) :: dql(101,MAX_NR)
-    !!
     real(wp) :: pdl(MAX_NR)
     real(wp) :: pdc(MAX_NR)
     real(wp) :: pda(MAX_NR)
@@ -20,17 +18,12 @@ module nr_grid
     real(wp) :: dens(MAX_NR) 
     real(wp) :: eta(MAX_NR)
     !common /a0i4/ fcoll(100),dens(100),eta(100)
-    real(wp) :: dq1(101,MAX_NR)
-    real(wp) :: dq2(101,MAX_NR)
 
     real(wp) :: ppv1,ppv2
     !common/vvv1/dq1(101,100),dq2(101,100),pdc(100),pda(100),ppv1,ppv2
     real(wp) :: pdfast(MAX_NR)
     !common /vvv3/ pdfast(100)
-    real(wp) :: dqi0(50,MAX_NR) 
-    !common /alph/ dqi0(50,100)    
-    real(wp) :: dncount(101,MAX_NR)
-    !common/findsigma/dncount(101,100)
+
     real(wp) :: pdprev1(MAX_NR), pdprev2(MAX_NR)
     !! массивы для невзязки
 
@@ -56,12 +49,6 @@ subroutine init_nr_grid_arrays(cltn)
     pdc=zero
     pda=zero
     pdfast=zero
-
-    dql=zero
-    dq1=zero
-    dq2=zero
-    dqi0=zero
-    dncount=zero
     vzmin=cltn
     vzmax=-cltn
 
@@ -141,32 +128,6 @@ subroutine renormalisation_power
 end
 
 
-subroutine find_achieved_radial_points(nvpt)
-    !!  find achieved radial points jbeg-jend
-    use rt_parameters, only : nr
-    implicit none
-    integer, intent(in) :: nvpt
-    integer i, j, jbeg, jend, nvmin, nvach
 
-    nvmin=1 !minimum counted events at a given radius rho
-    jbeg=1
-    jend=0
-    do j=1,nr
-        nvach=0
-        do i=1,nvpt
-            nvach = nvach + dncount(i,j)
-        end do
-        if (nvach.lt.nvmin) then
-            if (jend.eq.0) jbeg = jbeg + 1
-        else
-            jend=j
-        end if
-    end do
-    if (jend.eq.0.or.jbeg.ge.jend) then
-        write(*,*)'failure: jbeg=',jbeg,' jend=',jend 
-        pause
-        stop
-    end if
-end subroutine  
 
 end module nr_grid

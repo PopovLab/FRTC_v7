@@ -27,8 +27,9 @@ subroutine dfind(j, i, v, powpr, pil,pic,pia,df,decv,refr,vlf,vrt,ifast)
     use plasma, only: cltn, zza, vk, valfa, vperp ! def vperp(50,100) ????
     use rt_parameters, only: pchm, itend0, kv
     use nr_grid, only: ppv1, ppv2
-    use nr_grid, only: dncount, dq1, dq2, dql
-    use nr_grid, only: pdl, pdc, pda, pdfast, eta, dens, dqi0, fcoll
+    !use nr_grid, only: dncount, dq1, dq2, dql
+    use nr_grid, only: pdl, pdc, pda, pdfast, eta, dens, fcoll
+    use small_vgrid, only: dncount, dql, dqi0
     implicit none
     integer,  intent(in) :: i, j, ifast
     real(wp), intent(in) :: v, powpr, pil, pic, pia, df, decv, refr, vlf, vrt
@@ -68,12 +69,12 @@ subroutine dfind(j, i, v, powpr, pil,pic,pia,df,decv,refr,vlf,vrt,ifast)
             else
                 dd=zero
             end if
-            dq1(i,j)=dq1(i,j)+dd
+            !dq1(i,j)=dq1(i,j)+dd
         else  ! weak absorption
             ppv2=ppv2+pchgl
             dd = abs(2.d0*decv*powpr/vk(j)) * 1.d-10
             dncount(i,j)=dncount(i,j)+1.d0
-            dq2(i,j)=dq2(i,j)+dd
+            !dq2(i,j)=dq2(i,j)+dd
         end if
     endif
     

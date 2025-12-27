@@ -22,13 +22,16 @@ contains
         use nr_grid, only: pdprev1, pdprev2        
         use nr_grid, only: init_nr_grid_arrays, find_nevyazka
         use nr_grid, only: calculate_total_current_and_power
-        use nr_grid, only: find_achieved_radial_points, renormalisation_power
+        use nr_grid, only: renormalisation_power
+        use small_vgrid,  only: find_achieved_radial_points
+        use small_vgrid,  only: init_small_vgrid_arrays
+        use small_vgrid, only: nvpt
 
         use iteration_result_mod
         use power, only: pnab, plost, psum4
-        use small_vgrid, only: nvpt
-        use small_vgrid, only: calculate_dfundv
-        use small_vgrid, only: find_velocity_limits_and_initial_dfdv, recalculate_f_for_a_new_mesh
+
+        use plasma, only: calculate_dfundv
+        use plasma, only: find_velocity_limits_and_initial_dfdv, recalculate_f_for_a_new_mesh
         use math_module,  only: integral
         use decrements,   only: kzero
         use source_new_mod
@@ -64,8 +67,9 @@ contains
         call find_volums_and_surfaces
 
         call init_nr_grid_arrays(cltn)
+        call init_small_vgrid_arrays        
         call init_iteration_vars
-
+  
         anb=zero
         fuspow=zero
         o_da=zero
@@ -150,6 +154,7 @@ contains
             call recalculate_f_for_a_new_mesh(ispectr, iterat)
             call init_iteration_vars
             call init_nr_grid_arrays(cltn)
+            call init_small_vgrid_arrays
             goto 80
         end if
         ! ------------------------------------------
@@ -231,7 +236,7 @@ contains
         use plasma, only: zefff, fn1, fn2
         use plasma, only: vt0, fvt, cltn, cnye
         !use driven_current_module, only : zv1, zv2
-        use nr_grid, only : dql
+        use small_vgrid, only : dql
         use maxwell, only: i0
         use nr_grid, only: vij, dfij, dij
         use small_vgrid, only: ipt, ipt1, MAX_PT
@@ -401,7 +406,8 @@ contains
         use constants, only: zero
         use rt_parameters, only: nr, itend0, kv
         use plasma, only:  vperp
-        use nr_grid, only: dqi0, MAX_NR
+        use nr_grid, only:  MAX_NR
+        use small_vgrid, only: dqi0
         implicit none
         integer :: i, j
         real(wp) :: galfa(50,MAX_NR)  ! возможно массив должеб быть доступен еще где-то
