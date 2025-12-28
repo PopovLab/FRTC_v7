@@ -6,7 +6,7 @@ contains
     !! calculation of distribution functions at time t1=t+dtau !!
 subroutine fokkerplanck_compute(time, TAU)
     use FokkerPlanck1D_mod, only: FokkerPlanck1D
-    use rt_parameters, only: nr
+    use rt_parameters, only: nr, save_interval
     use writer_module, only: write_v_array, binary_write_array
     use maxwell, only: jindex, kindex, flag_d0
     use nr_grid, only: vij, fij, fij0, dij, dfij
@@ -20,7 +20,7 @@ subroutine fokkerplanck_compute(time, TAU)
     integer n,i,j,it,nt,k
     real(wp) xend,h,dt
     real(wp) znak,alfa2,dt0,h0,r
-
+    real(wp), save  :: last_time_saving = 0
     parameter(dt0=0.1d0,h0=0.1d0)
 
     dtstep=TAU/dble(ntau) !seconds 
@@ -63,11 +63,13 @@ subroutine fokkerplanck_compute(time, TAU)
     end do
 
     write(*,*)'fokkerplanck nr= ',nr,' ntau =',ntau, 'nt =', nt
-
-    call binary_write_array(vij, fij0(:,1:nr,:), time, 'maxwell_fij0')
-    call write_v_array(vij, fij(:,1:nr,:),  time, 'maxwell')
-    call write_v_array(vij, dfij(:,1:nr,:), time, 'f_derivative')
-    call write_v_array(vij,  dij(:,1:nr,:), time, 'diffusion')
+    if (time - last_time_saving>save_interval) then
+        call binary_write_array(vij, fij0(:,1:nr,:), time, 'maxwell_fij0')
+        call write_v_array(vij, fij(:,1:nr,:),  time, 'maxwell')
+        call write_v_array(vij, dfij(:,1:nr,:), time, 'f_derivative')
+        call write_v_array(vij,  dij(:,1:nr,:), time, 'diffusion')
+        save_interval= last_time_saving
+    endif
     !call write_matrix(dij(1:i0,1:nr,1), time, 'diffusion')
     !time2 = sys_time() - time1
     !call my_timer%stop

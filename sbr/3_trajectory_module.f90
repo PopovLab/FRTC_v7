@@ -151,7 +151,7 @@ subroutine write_trajectories(tview, ispectr,nnz,ntet) !sav2008
     use plasma
     use decrements, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
     use decrements, only: zatukh
-    use rt_parameters, only :  nr, itend0, kv, nmaxm, traj_len_seved
+    use rt_parameters, only :  nr, itend0, kv, nmaxm, traj_len_seved, save_interval
     use small_vgrid, only : dflf, dfrt, distr
     use driver_module !, only: jrad, iww, izz, length
     use trajectory_data
@@ -184,6 +184,9 @@ subroutine write_trajectories(tview, ispectr,nnz,ntet) !sav2008
     real(wp) :: df, powpr, powd, powal, pil, pic
     real(wp) :: powcol, pia, pt, denom, powdamped, domin, fff
     real(wp) :: pow 
+    real(wp), save  :: last_time_saving_pos = 0
+    real(wp), save  :: last_time_saving_neg = 0
+    real(wp) :: delta_time
     character(14) folder
     character(40) ver_fn
     character(40) fname
@@ -192,8 +195,10 @@ subroutine write_trajectories(tview, ispectr,nnz,ntet) !sav2008
     !print *, name(m)
     if (ispectr>0) then
         folder = "lhcd/traj/pos/"
+        delta_time = tview - last_time_saving_pos
     else
         folder = "lhcd/traj/neg/"
+        delta_time = tview - last_time_saving_neg
     endif
 
     write(ver_fn,'(A, "v2")') folder
@@ -203,8 +208,17 @@ subroutine write_trajectories(tview, ispectr,nnz,ntet) !sav2008
     close(1)
 
     write(fname,'(A, f9.7,".dat")') folder, tview
-    print *, fname
-
+    
+    print *, 'traj file:', fname, delta_time
+    if (delta_time<save_interval) then 
+        print *,  "skip saving"
+        return
+    endif
+    if (ispectr>0) then
+        last_time_saving_pos = tview
+    else
+        last_time_saving_neg = tview 
+    endif
     if (traj_len_seved == 0) then
         return
     endif

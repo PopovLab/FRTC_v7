@@ -130,7 +130,8 @@ module rt_parameters
     !! maximum number of trajectories
     integer :: max_size_of_traj
     !! maximum length of trajectories
-
+    real(wp) :: save_interval
+    !! time interval of saving traj and distrb
     contains      
     subroutine show_parameters()          
       print*, "Freq = ", freq          
@@ -152,6 +153,8 @@ module rt_parameters
       print*, "fp_solver = ", fp_solver 
       print*, "max_number_of_traj = ", max_number_of_traj 
       print*, "max_size_of_traj = ", max_size_of_traj       
+      print*, "save_interval = ", save_interval       
+      
 
       print*, "---------- spectrum --------------"
       print*, "spectrum_type = ", spectrum_type
@@ -186,7 +189,7 @@ module rt_parameters
         namelist /options/ ipri, iw, ismth, ismthalf, ismthout, inew, itor, ipol, &
             upl_fix, upl_value, &
             fp_solver, traj_len_seved, &
-            max_number_of_traj, max_size_of_traj
+            max_number_of_traj, max_size_of_traj, save_interval
         namelist /grill_parameters/ Zplus, Zminus, ZGapPlus, ZGapMinus, ntet, nnz
         namelist /spectrum/ spectrum_type, spectrum_PWM, spectrum_coordinate_system 
         ! Namelist definition===============================
