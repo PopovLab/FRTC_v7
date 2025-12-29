@@ -62,8 +62,8 @@ subroutine fokkerplanck_compute(time, TAU)
         end do
     end do
 
-    write(*,*)'fokkerplanck nr= ',nr,' ntau =',ntau, 'nt =', nt
-    if (time - last_time_saving>save_interval) then
+    write(*,*)'fokkerplanck nr= ', nr, ' ntau =', ntau, 'nt =', nt
+    if ((time - last_time_saving)>=save_interval) then
         call binary_write_array(vij, fij0(:,1:nr,:), time, 'maxwell_fij0')
         call write_v_array(vij, fij(:,1:nr,:),  time, 'maxwell')
         call write_v_array(vij, dfij(:,1:nr,:), time, 'f_derivative')
